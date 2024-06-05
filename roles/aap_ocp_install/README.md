@@ -27,9 +27,12 @@ If the variable is omitted the corresponding component will not be installed (e.
 | Key Name       | Required | Default Value | Description                                                  |
 |----------------|:--------:|---------------|--------------------------------------------------------------|
 | host           | Yes      | None          | OCP cluster to create the AAP objects in                     |
-| username       | Yes      | None          | Username to use for authenticating with OCP                  |
-| password       | Yes      | None          | Password to use for authenticating with OCP                  |
+| username       | Yes*     | None          | Username to use for authenticating with OCP                  |
+| password       | Yes*     | None          | Password to use for authenticating with OCP                  |
+| api_key        | Yes*     | None          | OCP API Token                                                |
 | validate_certs |          | None          | Validate SSL certificates. Valid values are: `true`, `false` |
+
+\* Either `api_key` or `username` and `password` can be specified.
 
 ### aap_ocp_install_operator keys
 

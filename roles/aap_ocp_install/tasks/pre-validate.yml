@@ -13,7 +13,38 @@
         __aap_ocp_install_prevalidate_errors: >
           {{ __aap_ocp_install_prevalidate_errors + ["aap_ocp_install_connection['host'] must be set"] }}
 
+- name: Ensure OpenShift username and password variables are not set when API Token set (block)
+  when: aap_ocp_install_connection['api_key'] is defined
+  block:
+    - name: Ensure OpenShift username and password variables are not set when API Token set
+      ansible.builtin.assert:
+        that:
+          - aap_ocp_install_connection['username'] is not defined
+          - aap_ocp_install_connection['password'] is not defined
+        quiet: true
+  rescue:
+    - name: Update validation errors fact - username
+      ansible.builtin.set_fact:
+        __aap_ocp_install_prevalidate_errors: >
+          {{ __aap_ocp_install_prevalidate_errors + ["aap_ocp_install_connection['username'] or aap_ocp_install_connection['password'] must not be set when aap_ocp_install_connection['api_key'] is set"] }}
+
+- name: Ensure OpenShift API token variable is set (block)
+  when: aap_ocp_install_connection['api_key'] is defined
+  block:
+    - name: Ensure OpenShift API token variable is set
+      ansible.builtin.assert:
+        that:
+          - aap_ocp_install_connection['api_key'] is defined
+          - aap_ocp_install_connection['api_key'] | default("", true) | length > 0
+        quiet: true
+  rescue:
+    - name: Update validation errors fact - api_key
+      ansible.builtin.set_fact:
+        __aap_ocp_install_prevalidate_errors: >
+          {{ __aap_ocp_install_prevalidate_errors + ["aap_ocp_install_connection['api_key'] must be set"] }}
+
 - name: Ensure OpenShift username variable is set (block)
+  when: aap_ocp_install_connection['api_key'] is not defined
   block:
     - name: Ensure OpenShift username variable is set
       ansible.builtin.assert:
@@ -28,6 +59,7 @@
           {{ __aap_ocp_install_prevalidate_errors + ["aap_ocp_install_connection['username'] must be set"] }}
 
 - name: Ensure OpenShift password variable is set (block)
+  when: aap_ocp_install_connection['api_key'] is not defined
   block:
     - name: Ensure OpenShift password variable is set
       ansible.builtin.assert:

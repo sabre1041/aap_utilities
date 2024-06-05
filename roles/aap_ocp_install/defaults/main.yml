@@ -4,6 +4,7 @@
 #   host:
 #   username:
 #   password:
+#   api_key:
 #   verify_ssl:
 
 # Namespace to install into
